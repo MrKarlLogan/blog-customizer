@@ -1,7 +1,7 @@
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 import styles from './ArticleParamsForm.module.scss';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Select } from 'src/ui/select';
 import { Separator } from 'src/ui/separator';
 import {
@@ -27,12 +27,24 @@ type FormProps = {
 
 export const ArticleParamsForm = (props: FormProps) => {
 	const [open, setOpen] = useState(false);
+	const formRef = useRef<HTMLDivElement>(null);
 
 	const handleToogleOpen = () => setOpen(!open);
 
+	useEffect(() => {
+		const handleOutside = (event: MouseEvent) => {
+			const { target } = event;
+			if (target instanceof Node && !formRef.current?.contains(target))
+				open && setOpen(false);
+		};
+
+		window.addEventListener('mousedown', handleOutside);
+		return () => window.removeEventListener('mousedown', handleOutside);
+	}, [open]);
+
 	return (
-		<>
-			<ArrowButton isOpen={open} onClick={handleToogleOpen} />
+		<div ref={formRef}>
+			<ArrowButton isOpen={open} onClick={handleToogleOpen} />{' '}
 			<aside className={`${styles.container} ${open && styles.container_open}`}>
 				<form
 					className={styles.form}
@@ -86,6 +98,6 @@ export const ArticleParamsForm = (props: FormProps) => {
 					</div>
 				</form>
 			</aside>
-		</>
+		</div>
 	);
 };
