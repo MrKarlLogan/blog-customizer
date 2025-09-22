@@ -15,58 +15,73 @@ import {
 } from 'src/constants/articleProps';
 import { RadioGroup } from 'src/ui/radio-group';
 
-export const ArticleParamsForm = () => {
-	const [open, setOpen] = useState(false);
-	const [formState, setFormState] = useState(defaultArticleState);
-
-	const handleClickOpen = () => setOpen(!open);
-	const handleChangeForm = (
-		key: keyof typeof formState,
+type FormProps = {
+	formState: typeof defaultArticleState;
+	onChangeForm: (
+		key: keyof typeof defaultArticleState,
 		selected: OptionType
-	) => {
-		setFormState((prev) => ({ ...prev, [key]: selected }));
-	};
+	) => void;
+	onApply: () => void;
+	onReset: () => void;
+};
+
+export const ArticleParamsForm = (props: FormProps) => {
+	const [open, setOpen] = useState(false);
+
+	const handleToogleOpen = () => setOpen(!open);
 
 	return (
 		<>
-			<ArrowButton isOpen={open} onClick={handleClickOpen} />
+			<ArrowButton isOpen={open} onClick={handleToogleOpen} />
 			<aside className={`${styles.container} ${open && styles.container_open}`}>
-				<form className={styles.form}>
+				<form
+					className={styles.form}
+					onSubmit={(event) => {
+						event.preventDefault();
+						props.onApply();
+					}}>
 					<h2 className={styles.form_title}>Задайте параметры</h2>
 					<Select
 						title='Шрифт'
 						options={fontFamilyOptions}
-						selected={formState.fontFamilyOption}
-						onChange={(option) => handleChangeForm('fontFamilyOption', option)}
+						selected={props.formState.fontFamilyOption}
+						onChange={(option) =>
+							props.onChangeForm('fontFamilyOption', option)
+						}
 					/>
 					<RadioGroup
 						title='Размер шрифта'
 						options={fontSizeOptions}
-						selected={formState.fontSizeOption}
+						selected={props.formState.fontSizeOption}
 						name='fontSize'
-						onChange={(option) => handleChangeForm('fontSizeOption', option)}
+						onChange={(option) => props.onChangeForm('fontSizeOption', option)}
 					/>
 					<Select
 						title='Цвет шрифта'
 						options={fontColors}
-						selected={formState.fontColor}
-						onChange={(option) => handleChangeForm('fontColor', option)}
+						selected={props.formState.fontColor}
+						onChange={(option) => props.onChangeForm('fontColor', option)}
 					/>
 					<Separator />
 					<Select
 						title='Цвет фона'
 						options={backgroundColors}
-						selected={formState.backgroundColor}
-						onChange={(option) => handleChangeForm('backgroundColor', option)}
+						selected={props.formState.backgroundColor}
+						onChange={(option) => props.onChangeForm('backgroundColor', option)}
 					/>
 					<Select
 						title='Ширина контента'
 						options={contentWidthArr}
-						selected={formState.contentWidth}
-						onChange={(option) => handleChangeForm('contentWidth', option)}
+						selected={props.formState.contentWidth}
+						onChange={(option) => props.onChangeForm('contentWidth', option)}
 					/>
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' htmlType='reset' type='clear' />
+						<Button
+							title='Сбросить'
+							htmlType='reset'
+							type='clear'
+							onClick={props.onReset}
+						/>
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>
