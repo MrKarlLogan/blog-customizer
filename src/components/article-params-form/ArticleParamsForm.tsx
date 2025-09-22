@@ -44,7 +44,7 @@ export const ArticleParamsForm = (props: FormProps) => {
 
 	return (
 		<div ref={formRef}>
-			<ArrowButton isOpen={open} onClick={handleToogleOpen} />{' '}
+			<ArrowButton isOpen={open} onClick={handleToogleOpen} />
 			<aside className={`${styles.container} ${open && styles.container_open}`}>
 				<form
 					className={styles.form}
