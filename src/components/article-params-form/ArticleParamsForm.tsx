@@ -14,6 +14,7 @@ import {
 	OptionType,
 } from 'src/constants/articleProps';
 import { RadioGroup } from 'src/ui/radio-group';
+import clsx from 'clsx';
 
 type FormProps = {
 	formState: typeof defaultArticleState;
@@ -27,7 +28,7 @@ type FormProps = {
 
 export const ArticleParamsForm = (props: FormProps) => {
 	const [open, setOpen] = useState(false);
-	const formRef = useRef<HTMLDivElement>(null);
+	const formRef = useRef<HTMLDivElement | null>(null);
 
 	const handleToogleOpen = () => setOpen(!open);
 
@@ -45,7 +46,8 @@ export const ArticleParamsForm = (props: FormProps) => {
 	return (
 		<div ref={formRef}>
 			<ArrowButton isOpen={open} onClick={handleToogleOpen} />
-			<aside className={`${styles.container} ${open && styles.container_open}`}>
+			<aside
+				className={clsx(styles.container, { [styles.container_open]: open })}>
 				<form
 					className={styles.form}
 					onSubmit={(event) => {
