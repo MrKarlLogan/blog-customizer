@@ -14,6 +14,7 @@ import {
 	OptionType,
 } from 'src/constants/articleProps';
 import { RadioGroup } from 'src/ui/radio-group';
+import { Text } from 'src/ui/text';
 import clsx from 'clsx';
 
 type FormProps = {
@@ -54,7 +55,9 @@ export const ArticleParamsForm = (props: FormProps) => {
 						event.preventDefault();
 						props.onApply();
 					}}>
-					<h2 className={styles.form_title}>Задайте параметры</h2>
+					<Text as='h2' size={31} weight={800} uppercase>
+						Задайте параметры
+					</Text>
 					<Select
 						title='Шрифт'
 						options={fontFamilyOptions}
